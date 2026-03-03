@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:schedule_generator_ai/models/task.dart';
 import 'package:schedule_generator_ai/services/gemini_service.dart';
+import 'package:schedule_generator_ai/ui/home/components/add_task_card.dart';
+import 'package:schedule_generator_ai/ui/home/components/schedule_result_card.dart';
+import 'package:schedule_generator_ai/ui/home/components/task_list_section.dart';
 
-class MyWidget extends StatefulWidget {
-  const MyWidget({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<MyWidget> createState() => _MyWidgetState();
+  State<HomeScreen> createState() => _homeState();
 }
 
-class _MyWidgetState extends State<MyWidget> {
+class _homeState extends State<HomeScreen> {
   bool isLoading = false;
   final List<Task> tasks = []; // wadah untuk menmapung task dari user
   String scheduleResult = ''; // wadah untuk menampung task hasil generate schedule dari gemini
@@ -37,9 +40,22 @@ class _MyWidgetState extends State<MyWidget> {
         padding: EdgeInsets.all(16),
         children: [
           _buildHeader(),
-          // letakkan componen add task card disini
-          // letakkan componen task list disini
+          AddTaskCard(
+            onAddTask: (task) => setState(() => tasks.add(task)),
+          ),
+          SizedBox(height: 16),
+          TaskListSection(
+            tasks: tasks,
+            // ignore: collection_methods_unrelated_type
+            onDelete: (index) => setState(() => tasks.removeAt(index)),
+          ),
+          SizedBox(height: 16),
           _buildGenerateButton(),
+          
+          SizedBox(height: 16),
+          ScheduleResultCard(
+            schedule: scheduleResult
+          ),
         ],
       ),
     );
